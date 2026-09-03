@@ -3,1925 +3,1682 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>KODA Census</title>
 
 <script src="https://cdn.jsdelivr.net/npm/appwrite@17.0.0"></script>
 
 <style>
 *{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-  font-family:Arial,sans-serif;
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family:Inter,Arial,sans-serif;
 }
 
 body{
-  background:#f5f7fb;
-  color:#111827;
-}
-
-.app{
-  min-height:100vh;
-  display:flex;
-}
-
-.sidebar{
-  width:240px;
-  background:#fff;
-  border-right:1px solid #e5e7eb;
-  padding:22px 16px;
-}
-
-.brand{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  font-size:21px;
-  font-weight:800;
-  margin-bottom:35px;
-}
-
-.logo{
-  width:38px;
-  height:38px;
-  border-radius:12px;
-  background:linear-gradient(135deg,#6366f1,#8b5cf6);
-  color:#fff;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-weight:900;
-}
-
-.nav-title{
-  font-size:11px;
-  color:#9ca3af;
-  font-weight:700;
-  margin:20px 10px 8px;
-  text-transform:uppercase;
-}
-
-.nav-item{
-  padding:12px 13px;
-  border-radius:10px;
-  margin-bottom:5px;
-  cursor:pointer;
-  color:#4b5563;
-  font-size:14px;
-}
-
-.nav-item:hover,
-.nav-item.active{
-  background:#eef2ff;
-  color:#4f46e5;
-  font-weight:700;
-}
-
-.main{
-  flex:1;
-  min-width:0;
-}
-
-.topbar{
-  height:70px;
-  background:#fff;
-  border-bottom:1px solid #e5e7eb;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:0 28px;
-}
-
-.top-title{
-  font-size:20px;
-  font-weight:800;
-}
-
-.profile{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  cursor:pointer;
-}
-
-.avatar{
-  width:38px;
-  height:38px;
-  border-radius:50%;
-  background:#111827;
-  color:#fff;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-weight:700;
-}
-
-.content{
-  padding:28px;
-}
-
-.page{
-  display:none;
-}
-
-.page.active{
-  display:block;
-}
-
-.stats{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:16px;
-  margin-bottom:24px;
-}
-
-.card{
-  background:#fff;
-  border:1px solid #e5e7eb;
-  border-radius:16px;
-  padding:20px;
-}
-
-.stat-label{
-  color:#6b7280;
-  font-size:13px;
-  margin-bottom:9px;
-}
-
-.stat-number{
-  font-size:30px;
-  font-weight:800;
-}
-
-.grid{
-  display:grid;
-  grid-template-columns:2fr 1fr;
-  gap:18px;
-}
-
-h2{
-  font-size:18px;
-  margin-bottom:15px;
-}
-
-.progress{
-  height:9px;
-  background:#e5e7eb;
-  border-radius:20px;
-  overflow:hidden;
-  margin:10px 0;
-}
-
-.progress-bar{
-  height:100%;
-  background:#6366f1;
+    background:#f6f7fb;
+    color:#111827;
 }
 
 button{
-  border:none;
-  border-radius:10px;
-  padding:11px 16px;
-  cursor:pointer;
-  font-weight:700;
-  background:#4f46e5;
-  color:white;
+    font-family:inherit;
+    cursor:pointer;
 }
 
-button:hover{
-  opacity:.9;
+.hidden{
+    display:none!important;
 }
 
-button:disabled{
-  opacity:.6;
-  cursor:not-allowed;
+/* ================= LOGIN ================= */
+
+#loginScreen{
+    position:fixed;
+    inset:0;
+    background:#f6f7fb;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:9999;
+    padding:20px;
 }
 
-.queue-item,
-.teacher-item,
-.assignment-item{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:14px 0;
-  border-bottom:1px solid #f0f0f0;
+.login-card{
+    width:100%;
+    max-width:420px;
+    background:white;
+    border-radius:22px;
+    padding:34px;
+    box-shadow:0 20px 60px rgba(0,0,0,.10);
 }
 
-.queue-item:last-child,
-.teacher-item:last-child,
-.assignment-item:last-child{
-  border-bottom:none;
+.login-logo{
+    width:52px;
+    height:52px;
+    border-radius:15px;
+    background:linear-gradient(135deg,#6d5dfc,#8d7cff);
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:800;
+    font-size:22px;
+    margin-bottom:20px;
 }
 
-.badge{
-  padding:5px 9px;
-  border-radius:20px;
-  font-size:11px;
-  font-weight:700;
-  background:#eef2ff;
-  color:#4f46e5;
+.login-card h1{
+    font-size:27px;
+    margin-bottom:5px;
 }
 
-.table-wrap{
-  overflow-x:auto;
+.login-card p{
+    color:#6b7280;
+    margin-bottom:28px;
 }
 
-table{
-  width:100%;
-  border-collapse:collapse;
-  background:white;
-  border-radius:15px;
-  overflow:hidden;
+.login-label{
+    display:block;
+    font-size:13px;
+    font-weight:600;
+    margin-bottom:7px;
 }
 
-th,
-td{
-  padding:14px;
-  text-align:left;
-  border-bottom:1px solid #eee;
-  font-size:14px;
+.login-input{
+    width:100%;
+    height:48px;
+    border:1px solid #dfe3eb;
+    border-radius:11px;
+    padding:0 14px;
+    margin-bottom:18px;
+    outline:none;
+    font-size:15px;
 }
 
-th{
-  color:#6b7280;
-  font-size:12px;
-  text-transform:uppercase;
-}
-
-.modal{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.45);
-  display:none;
-  align-items:center;
-  justify-content:center;
-  padding:20px;
-  z-index:100;
-}
-
-.modal.show{
-  display:flex;
-}
-
-.modal-box{
-  width:100%;
-  max-width:600px;
-  background:white;
-  border-radius:18px;
-  padding:25px;
-  max-height:90vh;
-  overflow-y:auto;
-}
-
-.modal-header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:20px;
-}
-
-.close{
-  background:#f3f4f6;
-  color:#111827;
-  padding:7px 11px;
-}
-
-.field{
-  margin-bottom:15px;
-}
-
-.field label{
-  display:block;
-  font-size:13px;
-  font-weight:700;
-  margin-bottom:7px;
-}
-
-.field input,
-.field select{
-  width:100%;
-  padding:11px;
-  border:1px solid #d1d5db;
-  border-radius:9px;
-  outline:none;
-}
-
-.field input:focus,
-.field select:focus{
-  border-color:#6366f1;
-}
-
-.login-screen{
-  position:fixed;
-  inset:0;
-  background:#f5f7fb;
-  z-index:1000;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:20px;
-}
-
-.login-box{
-  width:100%;
-  max-width:420px;
-  background:white;
-  padding:32px;
-  border-radius:20px;
-  border:1px solid #e5e7eb;
-  box-shadow:0 15px 40px rgba(0,0,0,.08);
-}
-
-.login-brand{
-  text-align:center;
-  margin-bottom:25px;
-}
-
-.login-brand .logo{
-  margin:auto auto 12px;
-}
-
-.login-brand h1{
-  font-size:25px;
-}
-
-.error{
-  background:#fef2f2;
-  color:#dc2626;
-  padding:10px;
-  border-radius:8px;
-  margin-bottom:15px;
-  font-size:13px;
-  display:none;
-}
-
-.success{
-  background:#ecfdf5;
-  color:#059669;
-  padding:10px;
-  border-radius:8px;
-  margin-bottom:15px;
-  font-size:13px;
-  display:none;
+.login-input:focus{
+    border-color:#6d5dfc;
+    box-shadow:0 0 0 3px rgba(109,93,252,.10);
 }
 
 .login-button{
-  width:100%;
-  margin-top:5px;
+    width:100%;
+    height:48px;
+    border:none;
+    border-radius:11px;
+    background:#6d5dfc;
+    color:white;
+    font-size:15px;
+    font-weight:700;
 }
 
-.empty{
-  text-align:center;
-  color:#9ca3af;
-  padding:30px;
+.login-button:hover{
+    background:#5b4de8;
 }
+
+.login-button:disabled{
+    opacity:.65;
+    cursor:not-allowed;
+}
+
+#loginError{
+    min-height:20px;
+    color:#dc2626;
+    font-size:13px;
+    margin-bottom:12px;
+}
+
+/* ================= APP ================= */
+
+#app{
+    min-height:100vh;
+}
+
+.topbar{
+    height:72px;
+    background:white;
+    border-bottom:1px solid #e7e9ef;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 24px;
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    z-index:100;
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    font-size:20px;
+    font-weight:800;
+}
+
+.brand-logo{
+    width:40px;
+    height:40px;
+    border-radius:12px;
+    background:linear-gradient(135deg,#6d5dfc,#8d7cff);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:white;
+    font-weight:800;
+}
+
+.profile{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    cursor:pointer;
+}
+
+.profile-text{
+    text-align:right;
+}
+
+.profile-name{
+    font-size:14px;
+    font-weight:700;
+}
+
+.profile-role{
+    font-size:12px;
+    color:#6b7280;
+}
+
+.avatar{
+    width:38px;
+    height:38px;
+    border-radius:50%;
+    background:#ece9ff;
+    color:#5b4de8;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:800;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+    position:fixed;
+    top:72px;
+    left:0;
+    bottom:0;
+    width:235px;
+    background:white;
+    border-right:1px solid #e7e9ef;
+    padding:22px 14px;
+    z-index:90;
+}
+
+.sidebar-title{
+    font-size:11px;
+    color:#9ca3af;
+    font-weight:700;
+    margin:8px 12px 10px;
+    text-transform:uppercase;
+    letter-spacing:.07em;
+}
+
+.nav-item{
+    height:44px;
+    display:flex;
+    align-items:center;
+    gap:11px;
+    padding:0 12px;
+    border-radius:10px;
+    color:#6b7280;
+    font-size:14px;
+    font-weight:600;
+    margin-bottom:5px;
+    cursor:pointer;
+}
+
+.nav-item:hover{
+    background:#f5f3ff;
+    color:#5b4de8;
+}
+
+.nav-item.active{
+    background:#eeecff;
+    color:#5b4de8;
+}
+
+/* CONTENT */
+
+.main{
+    margin-left:235px;
+    padding:102px 28px 40px;
+}
+
+.page{
+    display:none;
+}
+
+.page.active{
+    display:block;
+}
+
+.page-title{
+    font-size:27px;
+    font-weight:800;
+    margin-bottom:6px;
+}
+
+.page-subtitle{
+    color:#6b7280;
+    font-size:14px;
+    margin-bottom:26px;
+}
+
+/* CARDS */
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:17px;
+    margin-bottom:24px;
+}
+
+.card{
+    background:white;
+    border:1px solid #e8eaf0;
+    border-radius:15px;
+    padding:20px;
+}
+
+.stat-title{
+    color:#6b7280;
+    font-size:13px;
+    margin-bottom:10px;
+}
+
+.stat-value{
+    font-size:29px;
+    font-weight:800;
+}
+
+.stat-small{
+    margin-top:7px;
+    font-size:12px;
+    color:#6b7280;
+}
+
+/* DASHBOARD */
+
+.grid-2{
+    display:grid;
+    grid-template-columns:1.5fr 1fr;
+    gap:20px;
+}
+
+.section-title{
+    font-size:17px;
+    font-weight:800;
+    margin-bottom:16px;
+}
+
+.progress-wrap{
+    margin-top:12px;
+}
+
+.progress-bar{
+    height:9px;
+    background:#eceef4;
+    border-radius:20px;
+    overflow:hidden;
+}
+
+.progress-fill{
+    height:100%;
+    width:75%;
+    background:#6d5dfc;
+    border-radius:20px;
+}
+
+.progress-info{
+    display:flex;
+    justify-content:space-between;
+    margin-top:8px;
+    font-size:13px;
+    color:#6b7280;
+}
+
+.reminder{
+    padding:13px 0;
+    border-bottom:1px solid #eef0f4;
+    font-size:13px;
+}
+
+.reminder:last-child{
+    border-bottom:none;
+}
+
+.reminder strong{
+    display:block;
+    margin-bottom:3px;
+}
+
+/* TABLE */
+
+.table-card{
+    background:white;
+    border:1px solid #e8eaf0;
+    border-radius:15px;
+    overflow:hidden;
+}
+
+.table-head{
+    padding:18px 20px;
+    border-bottom:1px solid #eef0f4;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th,td{
+    padding:15px 20px;
+    text-align:left;
+    border-bottom:1px solid #eef0f4;
+    font-size:13px;
+}
+
+th{
+    color:#6b7280;
+    font-size:12px;
+}
+
+.badge{
+    display:inline-flex;
+    padding:5px 9px;
+    border-radius:20px;
+    font-size:11px;
+    font-weight:700;
+}
+
+.badge.waiting{
+    background:#fff7df;
+    color:#a16207;
+}
+
+.badge.active{
+    background:#e9f7ef;
+    color:#15803d;
+}
+
+.badge.completed{
+    background:#e9edff;
+    color:#4f46e5;
+}
+
+.badge.follow{
+    background:#fff0f0;
+    color:#dc2626;
+}
+
+/* BUTTONS */
+
+.btn{
+    border:none;
+    border-radius:9px;
+    padding:10px 15px;
+    font-weight:700;
+    font-size:13px;
+}
+
+.btn-primary{
+    background:#6d5dfc;
+    color:white;
+}
+
+.btn-primary:hover{
+    background:#5b4de8;
+}
+
+.btn-secondary{
+    background:#f1f2f6;
+    color:#374151;
+}
+
+.btn-danger{
+    background:#fee2e2;
+    color:#b91c1c;
+}
+
+/* MODAL */
+
+.modal{
+    position:fixed;
+    inset:0;
+    background:rgba(17,24,39,.42);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:500;
+    padding:20px;
+}
+
+.modal.show{
+    display:flex;
+}
+
+.modal-card{
+    background:white;
+    width:100%;
+    max-width:540px;
+    max-height:90vh;
+    overflow:auto;
+    border-radius:18px;
+    padding:25px;
+}
+
+.modal-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+.modal-header h2{
+    font-size:20px;
+}
+
+.close{
+    border:none;
+    background:#f3f4f6;
+    width:34px;
+    height:34px;
+    border-radius:9px;
+    font-size:18px;
+}
+
+.form-group{
+    margin-bottom:16px;
+}
+
+.form-group label{
+    display:block;
+    font-size:12px;
+    font-weight:700;
+    margin-bottom:7px;
+}
+
+.form-control{
+    width:100%;
+    min-height:44px;
+    border:1px solid #dfe3eb;
+    border-radius:9px;
+    padding:10px 12px;
+    outline:none;
+}
+
+.form-control:focus{
+    border-color:#6d5dfc;
+}
+
+/* MOBILE */
 
 @media(max-width:900px){
 
-  .stats{
-    grid-template-columns:repeat(2,1fr);
-  }
+    .sidebar{
+        width:70px;
+        padding:15px 8px;
+    }
 
-  .grid{
-    grid-template-columns:1fr;
-  }
+    .sidebar-title{
+        display:none;
+    }
 
-  .sidebar{
-    width:200px;
-  }
+    .nav-item{
+        justify-content:center;
+        font-size:0;
+    }
+
+    .nav-item::first-letter{
+        font-size:18px;
+    }
+
+    .main{
+        margin-left:70px;
+    }
+
+    .stats{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .grid-2{
+        grid-template-columns:1fr;
+    }
 }
 
-@media(max-width:650px){
+@media(max-width:600px){
 
-  .sidebar{
-    display:none;
-  }
+    .topbar{
+        padding:0 12px;
+    }
 
-  .content{
-    padding:18px;
-  }
+    .brand{
+        font-size:17px;
+    }
 
-  .topbar{
-    padding:0 18px;
-  }
+    .profile-text{
+        display:none;
+    }
 
-  .stats{
-    grid-template-columns:1fr 1fr;
-  }
+    .main{
+        padding:92px 14px 30px;
+    }
+
+    .stats{
+        grid-template-columns:1fr 1fr;
+        gap:10px;
+    }
+
+    .card{
+        padding:15px;
+    }
+
+    .stat-value{
+        font-size:23px;
+    }
+
+    .table-card{
+        overflow-x:auto;
+    }
+
+    table{
+        min-width:650px;
+    }
 }
 </style>
 </head>
 
 <body>
 
-<!-- =========================
-     LOGIN
-========================= -->
+<!-- ================= LOGIN ================= -->
 
-<div class="login-screen" id="loginScreen">
+<div id="loginScreen">
 
-  <div class="login-box">
+    <div class="login-card">
 
-    <div class="login-brand">
+        <div class="login-logo">K</div>
 
-      <div class="logo">K</div>
+        <h1>KODA Census</h1>
+        <p>Teacher &amp; HM Portal</p>
 
-      <h1>KODA Census</h1>
+        <form id="loginForm">
 
-      <p style="color:#6b7280;margin-top:6px;">
-        Teacher & HM Portal
-      </p>
+            <label class="login-label" for="loginEmail">
+                Email
+            </label>
+
+            <input
+                id="loginEmail"
+                class="login-input"
+                type="email"
+                placeholder="Enter your email"
+                autocomplete="username"
+                required
+            >
+
+            <label class="login-label" for="loginPassword">
+                Password
+            </label>
+
+            <input
+                id="loginPassword"
+                class="login-input"
+                type="password"
+                placeholder="Enter your password"
+                autocomplete="current-password"
+                required
+            >
+
+            <div id="loginError"></div>
+
+            <button
+                id="loginButton"
+                class="login-button"
+                type="submit"
+            >
+                Login
+            </button>
+
+        </form>
 
     </div>
-
-    <div class="error" id="loginError"></div>
-
-    <div class="success" id="loginSuccess"></div>
-
-    <form id="loginForm">
-
-      <div class="field">
-
-        <label>Email</label>
-
-        <input
-          id="loginEmail"
-          type="email"
-          autocomplete="email"
-          placeholder="Enter your email"
-          required
-        >
-
-      </div>
-
-      <div class="field">
-
-        <label>Password</label>
-
-        <input
-          id="loginPassword"
-          type="password"
-          autocomplete="current-password"
-          placeholder="Enter your password"
-          required
-        >
-
-      </div>
-
-      <button
-        class="login-button"
-        type="submit"
-        id="loginButton"
-      >
-        Login
-      </button>
-
-    </form>
-
-  </div>
 
 </div>
 
 
-<!-- =========================
-     APPLICATION
-========================= -->
+<!-- ================= APPLICATION ================= -->
 
-<div class="app" id="app" style="display:none;">
+<div id="app" class="hidden">
 
-  <!-- SIDEBAR -->
-
-  <aside class="sidebar">
-
-    <div class="brand">
-
-      <div class="logo">K</div>
-
-      KODA Census
-
-    </div>
-
-    <div class="nav-title">
-      Main
-    </div>
-
-    <div
-      class="nav-item active"
-      onclick="showPage('dashboard',this)"
-    >
-      Dashboard
-    </div>
-
-    <div
-      class="nav-item"
-      onclick="showPage('queue',this)"
-    >
-      Household Queue
-    </div>
-
-    <div
-      class="nav-item"
-      onclick="showPage('assignments',this)"
-    >
-      Assignments
-    </div>
-
-    <div
-      class="nav-item"
-      onclick="showPage('reminders',this)"
-    >
-      Reminders
-    </div>
-
-    <div class="nav-title">
-      Management
-    </div>
-
-    <div
-      class="nav-item"
-      onclick="showPage('teachers',this)"
-    >
-      Teachers
-    </div>
-
-    <div
-      class="nav-item"
-      onclick="showPage('reports',this)"
-    >
-      Reports
-    </div>
-
-  </aside>
-
-
-  <!-- MAIN -->
-
-  <main class="main">
+    <!-- TOPBAR -->
 
     <header class="topbar">
 
-      <div
-        class="top-title"
-        id="pageTitle"
-      >
-        Dashboard
-      </div>
-
-      <div
-        class="profile"
-        onclick="logoutUser()"
-      >
-
-        <div>
-
-          <div
-            style="font-size:13px;font-weight:700;"
-            id="userName"
-          >
-            Teacher
-          </div>
-
-          <div
-            style="font-size:11px;color:#9ca3af;"
-            id="userRole"
-          >
-            Teacher
-          </div>
-
+        <div class="brand">
+            <div class="brand-logo">K</div>
+            <span>KODA Census</span>
         </div>
 
-        <div
-          class="avatar"
-          id="avatar"
-        >
-          T
-        </div>
+        <div class="profile" id="profileButton">
 
-      </div>
+            <div class="profile-text">
+                <div class="profile-name" id="profileName">
+                    Teacher
+                </div>
+
+                <div class="profile-role" id="profileRole">
+                    Teacher
+                </div>
+            </div>
+
+            <div class="avatar" id="profileAvatar">
+                T
+            </div>
+
+        </div>
 
     </header>
 
 
-    <section class="content">
+    <!-- SIDEBAR -->
 
+    <aside class="sidebar">
 
-      <!-- =========================
-           DASHBOARD
-      ========================= -->
+        <div class="sidebar-title">Main</div>
 
-      <div
-        class="page active"
-        id="dashboard"
-      >
-
-        <div class="stats">
-
-          <div class="card">
-
-            <div class="stat-label">
-              Assigned Households
-            </div>
-
-            <div
-              class="stat-number"
-              id="assignedCount"
-            >
-              64
-            </div>
-
-          </div>
-
-          <div class="card">
-
-            <div class="stat-label">
-              Completed
-            </div>
-
-            <div
-              class="stat-number"
-              id="completedCount"
-            >
-              48
-            </div>
-
-          </div>
-
-          <div class="card">
-
-            <div class="stat-label">
-              Pending
-            </div>
-
-            <div
-              class="stat-number"
-              id="pendingCount"
-            >
-              10
-            </div>
-
-          </div>
-
-          <div class="card">
-
-            <div class="stat-label">
-              Follow-up
-            </div>
-
-            <div
-              class="stat-number"
-              id="followupCount"
-            >
-              6
-            </div>
-
-          </div>
-
+        <div class="nav-item active" data-page="dashboard">
+            📊 <span>Dashboard</span>
         </div>
 
+        <div class="nav-item" data-page="queue">
+            🏠 <span>Household Queue</span>
+        </div>
 
-        <div class="grid">
+        <div class="nav-item" data-page="assignments">
+            📋 <span>Assignments</span>
+        </div>
 
-          <div class="card">
+        <div class="nav-item" data-page="reminders">
+            🔔 <span>Reminders</span>
+        </div>
 
-            <h2>
-              Assignment Progress
-            </h2>
+        <div class="sidebar-title">Management</div>
 
-            <div
-              style="display:flex;justify-content:space-between;"
-            >
+        <div class="nav-item" data-page="teachers">
+            👥 <span>Teachers</span>
+        </div>
 
-              <span>
-                Class 8-A
-              </span>
+        <div class="nav-item" data-page="reports">
+            📈 <span>Reports</span>
+        </div>
 
-              <strong id="progressText">
-                75%
-              </strong>
+    </aside>
 
-            </div>
 
-            <div class="progress">
+    <!-- MAIN -->
 
-              <div
-                class="progress-bar"
-                id="progressBar"
-                style="width:75%;"
-              ></div>
+    <main class="main">
 
-            </div>
+        <!-- DASHBOARD -->
 
-            <p
-              style="font-size:13px;color:#6b7280;"
-            >
-              Ward 12
+        <section id="dashboard" class="page active">
+
+            <h1 class="page-title">Dashboard</h1>
+
+            <p class="page-subtitle">
+                Overview of your census collection activity.
             </p>
 
-          </div>
+            <div class="stats">
+
+                <div class="card">
+                    <div class="stat-title">
+                        Assigned Households
+                    </div>
+
+                    <div class="stat-value">
+                        64
+                    </div>
+
+                    <div class="stat-small">
+                        Total assigned
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="stat-title">
+                        Completed
+                    </div>
+
+                    <div class="stat-value">
+                        48
+                    </div>
+
+                    <div class="stat-small">
+                        75% completed
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="stat-title">
+                        Pending
+                    </div>
+
+                    <div class="stat-value">
+                        10
+                    </div>
+
+                    <div class="stat-small">
+                        Awaiting collection
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="stat-title">
+                        Follow-up
+                    </div>
+
+                    <div class="stat-value">
+                        6
+                    </div>
+
+                    <div class="stat-small">
+                        Need another visit
+                    </div>
+                </div>
+
+            </div>
 
 
-          <div class="card">
+            <div class="grid-2">
 
-            <h2>
-              Quick Actions
-            </h2>
+                <div class="card">
 
-            <button onclick="openHLOModal()">
-              Start HLO
-            </button>
+                    <div class="section-title">
+                        Class 8-A / Ward 12
+                    </div>
+
+                    <p style="font-size:13px;color:#6b7280;">
+                        Census collection progress
+                    </p>
+
+                    <div class="progress-wrap">
+
+                        <div class="progress-bar">
+                            <div class="progress-fill"></div>
+                        </div>
+
+                        <div class="progress-info">
+                            <span>48 of 64 households</span>
+                            <strong>75%</strong>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="card">
+
+                    <div class="section-title">
+                        Reminders
+                    </div>
+
+                    <div class="reminder">
+                        <strong>6 follow-ups pending</strong>
+                        <span>Households require another visit.</span>
+                    </div>
+
+                    <div class="reminder">
+                        <strong>10 households pending</strong>
+                        <span>Continue your assigned queue.</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- QUEUE -->
+
+        <section id="queue" class="page">
+
+            <h1 class="page-title">Household Queue</h1>
+
+            <p class="page-subtitle">
+                Manage your assigned household collection queue.
+            </p>
+
+            <div class="table-card">
+
+                <div class="table-head">
+
+                    <div class="section-title" style="margin:0;">
+                        Assigned Households
+                    </div>
+
+                    <button
+                        class="btn btn-primary"
+                        onclick="openHLO()"
+                    >
+                        Call Next
+                    </button>
+
+                </div>
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>Token</th>
+                            <th>Household Head</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        <tr>
+                            <td>#050</td>
+                            <td>Waiting for collection</td>
+                            <td>
+                                <span class="badge waiting">
+                                    Waiting
+                                </span>
+                            </td>
+                            <td>
+                                <button
+                                    class="btn btn-primary"
+                                    onclick="openHLO('#050')"
+                                >
+                                    Start HLO
+                                </button>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>#051</td>
+                            <td>Ravi Kumar</td>
+                            <td>
+                                <span class="badge active">
+                                    Active
+                                </span>
+                            </td>
+                            <td>
+                                <button
+                                    class="btn btn-secondary"
+                                    onclick="openHLO('#051')"
+                                >
+                                    Continue
+                                </button>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>#052</td>
+                            <td>Meena Devi</td>
+                            <td>
+                                <span class="badge follow">
+                                    Follow-up
+                                </span>
+                            </td>
+                            <td>
+                                <button
+                                    class="btn btn-secondary"
+                                    onclick="openHLO('#052')"
+                                >
+                                    Open
+                                </button>
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+        <!-- ASSIGNMENTS -->
+
+        <section id="assignments" class="page">
+
+            <h1 class="page-title">Assignments</h1>
+
+            <p class="page-subtitle">
+                View census assignments by class and area.
+            </p>
+
+            <div class="table-card">
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>Class</th>
+                            <th>Area</th>
+                            <th>Progress</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        <tr>
+                            <td>Class 8-A</td>
+                            <td>Ward 12</td>
+                            <td>75%</td>
+                        </tr>
+
+                        <tr>
+                            <td>Class 7-B</td>
+                            <td>Ward 13</td>
+                            <td>42%</td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+        <!-- REMINDERS -->
+
+        <section id="reminders" class="page">
+
+            <h1 class="page-title">Reminders</h1>
+
+            <p class="page-subtitle">
+                Follow-ups and pending census activities.
+            </p>
+
+            <div class="card">
+
+                <div class="reminder">
+                    <strong>Follow-up household #052</strong>
+                    <span>Another visit is required.</span>
+                </div>
+
+                <div class="reminder">
+                    <strong>10 pending households</strong>
+                    <span>Complete the remaining assignments.</span>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- TEACHERS -->
+
+        <section id="teachers" class="page">
+
+            <h1 class="page-title">Teachers</h1>
+
+            <p class="page-subtitle">
+                Teacher collection performance.
+            </p>
+
+            <div class="table-card">
+
+                <div class="table-head">
+
+                    <div class="section-title" style="margin:0;">
+                        Teacher Performance
+                    </div>
+
+                    <button
+                        class="btn btn-primary"
+                        onclick="openTeacherModal()"
+                    >
+                        Assign Teacher
+                    </button>
+
+                </div>
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>Teacher</th>
+                            <th>Class</th>
+                            <th>Progress</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        <tr>
+                            <td>Anitha</td>
+                            <td>8-A</td>
+                            <td>86%</td>
+                        </tr>
+
+                        <tr>
+                            <td>Kumar</td>
+                            <td>8-B</td>
+                            <td>79%</td>
+                        </tr>
+
+                        <tr>
+                            <td>Priya</td>
+                            <td>7-A</td>
+                            <td>43%</td>
+                        </tr>
+
+                        <tr>
+                            <td>Suresh</td>
+                            <td>7-B</td>
+                            <td>21%</td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+        <!-- REPORTS -->
+
+        <section id="reports" class="page">
+
+            <h1 class="page-title">Reports</h1>
+
+            <p class="page-subtitle">
+                Census collection summary.
+            </p>
+
+            <div class="stats">
+
+                <div class="card">
+                    <div class="stat-title">Total</div>
+                    <div class="stat-value">320</div>
+                </div>
+
+                <div class="card">
+                    <div class="stat-title">Completed</div>
+                    <div class="stat-value">248</div>
+                </div>
+
+                <div class="card">
+                    <div class="stat-title">Pending</div>
+                    <div class="stat-value">72</div>
+                </div>
+
+                <div class="card">
+                    <div class="stat-title">Progress</div>
+                    <div class="stat-value">77%</div>
+                </div>
+
+            </div>
 
             <button
-              onclick="showPage('queue')"
-              style="margin-top:10px;background:#111827;"
+                class="btn btn-primary"
+                onclick="exportReport()"
             >
-              Open Queue
+                Export Report
             </button>
 
-          </div>
+        </section>
+
+    </main>
+
+</div>
+
+
+<!-- ================= HLO MODAL ================= -->
+
+<div id="hloModal" class="modal">
+
+    <div class="modal-card">
+
+        <div class="modal-header">
+
+            <h2>HLO — 33 Questions</h2>
+
+            <button
+                class="close"
+                onclick="closeModal('hloModal')"
+            >
+                ×
+            </button>
 
         </div>
 
+        <div class="form-group">
 
-        <div
-          class="card"
-          style="margin-top:18px;"
+            <label>Token</label>
+
+            <input
+                id="hloToken"
+                class="form-control"
+                type="text"
+                readonly
+            >
+
+        </div>
+
+        <div class="form-group">
+
+            <label>Name of Head of Household</label>
+
+            <input
+                id="householdHead"
+                class="form-control"
+                type="text"
+                placeholder="Enter name"
+            >
+
+        </div>
+
+        <div class="form-group">
+
+            <label>Collection Mode</label>
+
+            <select
+                id="collectionMode"
+                class="form-control"
+            >
+                <option>Door-to-door</option>
+                <option>School Camp</option>
+                <option>Follow-up Visit</option>
+            </select>
+
+        </div>
+
+        <button
+            class="btn btn-primary"
+            onclick="startHLO()"
         >
+            Start HLO
+        </button>
 
-          <h2>
-            Next Households
-          </h2>
-
-          <div id="dashboardQueue"></div>
-
-        </div>
-
-      </div>
-
-
-      <!-- =========================
-           QUEUE
-      ========================= -->
-
-      <div
-        class="page"
-        id="queue"
-      >
-
-        <div class="card">
-
-          <div
-            style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;"
-          >
-
-            <div>
-
-              <h2>
-                Household Queue
-              </h2>
-
-              <p
-                style="font-size:13px;color:#6b7280;"
-              >
-                Your assigned households
-              </p>
-
-            </div>
-
-            <button onclick="callNext()">
-              Call Next
-            </button>
-
-          </div>
-
-          <div id="queueList"></div>
-
-        </div>
-
-      </div>
-
-
-      <!-- =========================
-           ASSIGNMENTS
-      ========================= -->
-
-      <div
-        class="page"
-        id="assignments"
-      >
-
-        <div class="card">
-
-          <h2>
-            Assignments
-          </h2>
-
-          <div class="assignment-item">
-
-            <div>
-
-              <strong>
-                Class 8-A
-              </strong>
-
-              <div
-                style="font-size:12px;color:#9ca3af;"
-              >
-                Ward 12
-              </div>
-
-            </div>
-
-            <span class="badge">
-              75%
-            </span>
-
-          </div>
-
-
-          <div class="assignment-item">
-
-            <div>
-
-              <strong>
-                Class 7-B
-              </strong>
-
-              <div
-                style="font-size:12px;color:#9ca3af;"
-              >
-                Ward 9
-              </div>
-
-            </div>
-
-            <span class="badge">
-              42%
-            </span>
-
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <!-- =========================
-           REMINDERS
-      ========================= -->
-
-      <div
-        class="page"
-        id="reminders"
-      >
-
-        <div class="card">
-
-          <h2>
-            Reminders
-          </h2>
-
-          <div class="queue-item">
-
-            <div>
-
-              <strong>
-                Pending households
-              </strong>
-
-              <div
-                style="font-size:12px;color:#9ca3af;"
-              >
-                Complete today's pending HLOs
-              </div>
-
-            </div>
-
-            <span class="badge">
-              Today
-            </span>
-
-          </div>
-
-
-          <div class="queue-item">
-
-            <div>
-
-              <strong>
-                Follow-up
-              </strong>
-
-              <div
-                style="font-size:12px;color:#9ca3af;"
-              >
-                Review follow-up households
-              </div>
-
-            </div>
-
-            <span class="badge">
-              6
-            </span>
-
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <!-- =========================
-           TEACHERS
-      ========================= -->
-
-      <div
-        class="page"
-        id="teachers"
-      >
-
-        <div class="card">
-
-          <div
-            style="display:flex;justify-content:space-between;align-items:center;"
-          >
-
-            <h2>
-              Teachers
-            </h2>
-
-            <button onclick="openAssignModal()">
-              Assign Teacher
-            </button>
-
-          </div>
-
-
-          <div id="teacherList">
-
-            <div class="teacher-item">
-
-              <div>
-
-                <strong>
-                  Anitha
-                </strong>
-
-                <div
-                  style="font-size:12px;color:#9ca3af;"
-                >
-                  Class 8-A
-                </div>
-
-              </div>
-
-              <span class="badge">
-                86%
-              </span>
-
-            </div>
-
-
-            <div class="teacher-item">
-
-              <div>
-
-                <strong>
-                  Kumar
-                </strong>
-
-                <div
-                  style="font-size:12px;color:#9ca3af;"
-                >
-                  Class 8-A
-                </div>
-
-              </div>
-
-              <span class="badge">
-                79%
-              </span>
-
-            </div>
-
-
-            <div class="teacher-item">
-
-              <div>
-
-                <strong>
-                  Priya
-                </strong>
-
-                <div
-                  style="font-size:12px;color:#9ca3af;"
-                >
-                  Class 7-B
-                </div>
-
-              </div>
-
-              <span class="badge">
-                43%
-              </span>
-
-            </div>
-
-
-            <div class="teacher-item">
-
-              <div>
-
-                <strong>
-                  Suresh
-                </strong>
-
-                <div
-                  style="font-size:12px;color:#9ca3af;"
-                >
-                  Class 7-B
-                </div>
-
-              </div>
-
-              <span class="badge">
-                21%
-              </span>
-
-            </div>
-
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <!-- =========================
-           REPORTS
-      ========================= -->
-
-      <div
-        class="page"
-        id="reports"
-      >
-
-        <div class="stats">
-
-          <div class="card">
-
-            <div class="stat-label">
-              Total Households
-            </div>
-
-            <div class="stat-number">
-              320
-            </div>
-
-          </div>
-
-
-          <div class="card">
-
-            <div class="stat-label">
-              Completed
-            </div>
-
-            <div class="stat-number">
-              248
-            </div>
-
-          </div>
-
-
-          <div class="card">
-
-            <div class="stat-label">
-              Pending
-            </div>
-
-            <div class="stat-number">
-              72
-            </div>
-
-          </div>
-
-
-          <div class="card">
-
-            <div class="stat-label">
-              Progress
-            </div>
-
-            <div class="stat-number">
-              77%
-            </div>
-
-          </div>
-
-        </div>
-
-
-        <div class="card">
-
-          <h2>
-            Census Report
-          </h2>
-
-          <button onclick="exportReport()">
-            Export Report
-          </button>
-
-        </div>
-
-      </div>
-
-    </section>
-
-  </main>
+    </div>
 
 </div>
 
 
-<!-- =========================
-     HLO MODAL
-========================= -->
+<!-- ================= TEACHER MODAL ================= -->
 
-<div
-  class="modal"
-  id="hloModal"
->
+<div id="teacherModal" class="modal">
 
-  <div class="modal-box">
+    <div class="modal-card">
 
-    <div class="modal-header">
+        <div class="modal-header">
 
-      <h2>
-        House Listing Operation
-      </h2>
+            <h2>Assign Teacher</h2>
 
-      <button
-        class="close"
-        onclick="closeModal('hloModal')"
-      >
-        ✕
-      </button>
+            <button
+                class="close"
+                onclick="closeModal('teacherModal')"
+            >
+                ×
+            </button>
 
-    </div>
+        </div>
 
+        <div class="form-group">
 
-    <div class="field">
+            <label>Teacher Name</label>
 
-      <label>
-        Household Token
-      </label>
+            <input
+                id="teacherName"
+                class="form-control"
+                type="text"
+                placeholder="Teacher name"
+            >
 
-      <input
-        id="hloToken"
-        placeholder="Example: H001"
-      >
+        </div>
 
-    </div>
+        <div class="form-group">
 
+            <label>Class</label>
 
-    <div class="field">
+            <input
+                id="teacherClass"
+                class="form-control"
+                type="text"
+                placeholder="Example: 8-A"
+            >
 
-      <label>
-        Name of Head of Household
-      </label>
+        </div>
 
-      <input
-        id="hloHead"
-        placeholder="Enter name"
-      >
+        <div class="form-group">
 
-    </div>
+            <label>Area</label>
 
+            <input
+                id="teacherArea"
+                class="form-control"
+                type="text"
+                placeholder="Example: Ward 12"
+            >
 
-    <div class="field">
+        </div>
 
-      <label>
-        Collection Mode
-      </label>
-
-      <select id="hloMode">
-
-        <option>
-          In Person
-        </option>
-
-        <option>
-          Phone
-        </option>
-
-      </select>
+        <button
+            class="btn btn-primary"
+            onclick="assignTeacher()"
+        >
+            Assign Teacher
+        </button>
 
     </div>
-
-
-    <p
-      style="font-size:12px;color:#6b7280;margin-bottom:15px;"
-    >
-      HLO contains 33 official Census of India Phase 1 questions.
-    </p>
-
-
-    <button onclick="startHLO()">
-      Start HLO
-    </button>
-
-  </div>
-
-</div>
-
-
-<!-- =========================
-     ASSIGN MODAL
-========================= -->
-
-<div
-  class="modal"
-  id="assignModal"
->
-
-  <div class="modal-box">
-
-    <div class="modal-header">
-
-      <h2>
-        Assign Teacher
-      </h2>
-
-      <button
-        class="close"
-        onclick="closeModal('assignModal')"
-      >
-        ✕
-      </button>
-
-    </div>
-
-
-    <div class="field">
-
-      <label>
-        Teacher
-      </label>
-
-      <select id="assignTeacher">
-
-        <option>
-          Anitha
-        </option>
-
-        <option>
-          Kumar
-        </option>
-
-        <option>
-          Priya
-        </option>
-
-        <option>
-          Suresh
-        </option>
-
-      </select>
-
-    </div>
-
-
-    <div class="field">
-
-      <label>
-        Class / Area
-      </label>
-
-      <input
-        id="assignClass"
-        value="Class 8-A"
-      >
-
-    </div>
-
-
-    <div class="field">
-
-      <label>
-        Number of Households
-      </label>
-
-      <input
-        id="assignHouseholds"
-        type="number"
-        value="10"
-      >
-
-    </div>
-
-
-    <button onclick="assignTeacher()">
-      Assign
-    </button>
-
-  </div>
 
 </div>
 
 
 <script>
 
-/* =====================================================
-   APPWRITE
-===================================================== */
+/* =========================================================
+   APPWRITE CONFIGURATION
+   ========================================================= */
 
 const client = new Appwrite.Client();
 
 client
-  .setEndpoint("https://sgp.cloud.appwrite.io/v1")
-  .setProject("6a995d85002db02ed32f");
+    .setEndpoint("https://sgp.cloud.appwrite.io/v1")
+    .setProject("6a995d85002db02ed32f");
 
 const account = new Appwrite.Account(client);
 
 
-/* =====================================================
+/* =========================================================
    GLOBAL STATE
-===================================================== */
+   ========================================================= */
 
 let currentUser = null;
 
 
-/* =====================================================
-   ELEMENT HELPERS
-===================================================== */
+/* =========================================================
+   HELPER
+   ========================================================= */
 
 function $(id){
-  return document.getElementById(id);
+    return document.getElementById(id);
 }
 
 
-/* =====================================================
+/* =========================================================
+   LOGIN
+   ========================================================= */
+
+async function loginUser(){
+
+    const email = $("loginEmail").value.trim();
+    const password = $("loginPassword").value;
+
+    const errorBox = $("loginError");
+    const button = $("loginButton");
+
+    errorBox.textContent = "";
+
+    if(!email){
+        errorBox.textContent = "Please enter your email.";
+        return;
+    }
+
+    if(!password){
+        errorBox.textContent = "Please enter your password.";
+        return;
+    }
+
+    button.disabled = true;
+    button.textContent = "Signing in...";
+
+    try{
+
+        /*
+         * IMPORTANT:
+         * Do not log the password.
+         *
+         * Appwrite expects both email and password.
+         */
+
+        await account.createEmailPasswordSession({
+            email: email,
+            password: password
+        });
+
+        currentUser = await account.get();
+
+        showApp(currentUser);
+
+    }catch(error){
+
+        console.error("Appwrite login error:", error);
+
+        errorBox.textContent =
+            error.message || "Login failed.";
+
+    }finally{
+
+        button.disabled = false;
+        button.textContent = "Login";
+
+    }
+}
+
+
+/* =========================================================
+   CHECK EXISTING LOGIN
+   ========================================================= */
+
+async function checkLogin(){
+
+    try{
+
+        currentUser = await account.get();
+
+        showApp(currentUser);
+
+    }catch(error){
+
+        currentUser = null;
+
+        $("loginScreen").classList.remove("hidden");
+        $("app").classList.add("hidden");
+
+    }
+}
+
+
+/* =========================================================
+   SHOW APP
+   ========================================================= */
+
+function showApp(user){
+
+    $("loginScreen").classList.add("hidden");
+    $("app").classList.remove("hidden");
+
+    const name =
+        user.name ||
+        user.email ||
+        "Teacher";
+
+    $("profileName").textContent = name;
+
+    $("profileAvatar").textContent =
+        name.charAt(0).toUpperCase();
+
+}
+
+
+/* =========================================================
+   LOGOUT
+   ========================================================= */
+
+async function logoutUser(){
+
+    try{
+
+        await account.deleteSession({
+            sessionId:"current"
+        });
+
+    }catch(error){
+
+        console.error("Logout error:",error);
+
+    }
+
+    currentUser = null;
+
+    $("app").classList.add("hidden");
+    $("loginScreen").classList.remove("hidden");
+
+    $("loginPassword").value = "";
+
+}
+
+
+/* =========================================================
    LOGIN FORM
-===================================================== */
+   ========================================================= */
 
-$("loginForm").addEventListener("submit", function(event){
+$("loginForm").addEventListener("submit",function(event){
 
-  event.preventDefault();
+    event.preventDefault();
 
-  loginUser();
+    loginUser();
 
 });
 
 
-/* =====================================================
-   LOGIN
-===================================================== */
+/* =========================================================
+   PROFILE CLICK = LOGOUT
+   ========================================================= */
 
-async function loginUser(){
+$("profileButton").addEventListener("click",function(){
 
-  const email = $("loginEmail").value.trim();
-  const password = $("loginPassword").value;
+    const confirmLogout =
+        confirm("Log out of KODA Census?");
 
-  const errorBox = $("loginError");
-  const successBox = $("loginSuccess");
-  const button = $("loginButton");
+    if(confirmLogout){
 
-  errorBox.style.display = "none";
-  successBox.style.display = "none";
-
-  if(!email){
-
-    errorBox.textContent =
-      "Please enter your email.";
-
-    errorBox.style.display = "block";
-
-    return;
-  }
-
-  if(!password){
-
-    errorBox.textContent =
-      "Please enter your password.";
-
-    errorBox.style.display = "block";
-
-    return;
-  }
-
-  button.disabled = true;
-  button.textContent = "Logging in...";
-
-  try{
-
-    /*
-      Appwrite Web SDK 17:
-      createEmailPasswordSession expects
-      an object containing email + password.
-    */
-
-    const session =
-      await account.createEmailPasswordSession({
-        email: email,
-        password: password
-      });
-
-    console.log(
-      "Appwrite session created:",
-      session
-    );
-
-    currentUser =
-      await account.get();
-
-    console.log(
-      "Authenticated user:",
-      currentUser
-    );
-
-    successBox.textContent =
-      "Login successful.";
-
-    successBox.style.display =
-      "block";
-
-    showApp(currentUser);
-
-  }catch(error){
-
-    console.error(
-      "KODA Census Appwrite Login Error:",
-      error
-    );
-
-    let message =
-      error && error.message
-      ? error.message
-      : "Login failed.";
-
-    /*
-      Give useful errors instead of
-      silently failing.
-    */
-
-    if(error && error.code === 401){
-
-      message =
-        "Invalid email or password.";
+        logoutUser();
 
     }
 
-    errorBox.textContent =
-      message;
-
-    errorBox.style.display =
-      "block";
-
-  }finally{
-
-    button.disabled = false;
-    button.textContent = "Login";
-
-  }
-
-}
+});
 
 
-/* =====================================================
-   CHECK EXISTING LOGIN
-===================================================== */
-
-async function checkLogin(){
-
-  try{
-
-    currentUser =
-      await account.get();
-
-    console.log(
-      "Existing Appwrite session:",
-      currentUser
-    );
-
-    showApp(currentUser);
-
-  }catch(error){
-
-    console.log(
-      "No active Appwrite session."
-    );
-
-    $("loginScreen").style.display =
-      "flex";
-
-    $("app").style.display =
-      "none";
-
-  }
-
-}
-
-
-/* =====================================================
-   SHOW APPLICATION
-===================================================== */
-
-function showApp(user){
-
-  $("loginScreen").style.display =
-    "none";
-
-  $("app").style.display =
-    "flex";
-
-  const name =
-    user && user.name
-    ? user.name
-    : "User";
-
-  $("userName").textContent =
-    name;
-
-  $("avatar").textContent =
-    name.charAt(0).toUpperCase();
-
-}
-
-
-/* =====================================================
-   LOGOUT
-===================================================== */
-
-async function logoutUser(){
-
-  const confirmLogout =
-    confirm("Do you want to logout?");
-
-  if(!confirmLogout){
-    return;
-  }
-
-  try{
-
-    await account.deleteSession({
-      sessionId:"current"
-    });
-
-  }catch(error){
-
-    console.error(
-      "Logout error:",
-      error
-    );
-
-  }
-
-  currentUser = null;
-
-  $("app").style.display =
-    "none";
-
-  $("loginScreen").style.display =
-    "flex";
-
-  $("loginPassword").value = "";
-
-}
-
-
-/* =====================================================
+/* =========================================================
    NAVIGATION
-===================================================== */
+   ========================================================= */
 
-function showPage(pageId, element){
+document.querySelectorAll(".nav-item").forEach(function(item){
 
-  document
-    .querySelectorAll(".page")
-    .forEach(function(page){
+    item.addEventListener("click",function(){
 
-      page.classList.remove("active");
+        const pageName =
+            item.getAttribute("data-page");
 
-    });
+        document.querySelectorAll(".nav-item")
+            .forEach(function(nav){
+                nav.classList.remove("active");
+            });
 
-  const page =
-    $(pageId);
+        item.classList.add("active");
 
-  if(page){
+        document.querySelectorAll(".page")
+            .forEach(function(page){
+                page.classList.remove("active");
+            });
 
-    page.classList.add("active");
+        const page =
+            $(pageName);
 
-  }
+        if(page){
 
-  document
-    .querySelectorAll(".nav-item")
-    .forEach(function(item){
-
-      item.classList.remove("active");
-
-    });
-
-  if(element){
-
-    element.classList.add("active");
-
-  }
-
-  const titles = {
-
-    dashboard:"Dashboard",
-
-    queue:"Household Queue",
-
-    assignments:"Assignments",
-
-    reminders:"Reminders",
-
-    teachers:"Teachers",
-
-    reports:"Reports"
-
-  };
-
-  $("pageTitle").textContent =
-    titles[pageId] || "KODA Census";
-
-}
-
-
-/* =====================================================
-   MODALS
-===================================================== */
-
-function openHLOModal(){
-
-  $("hloModal")
-    .classList.add("show");
-
-}
-
-
-function openAssignModal(){
-
-  $("assignModal")
-    .classList.add("show");
-
-}
-
-
-function closeModal(id){
-
-  $(id)
-    .classList.remove("show");
-
-}
-
-
-/* =====================================================
-   HLO
-===================================================== */
-
-function startHLO(){
-
-  const token =
-    $("hloToken").value.trim();
-
-  const head =
-    $("hloHead").value.trim();
-
-  if(!token || !head){
-
-    alert(
-      "Please enter the household token and head of household."
-    );
-
-    return;
-
-  }
-
-  closeModal("hloModal");
-
-  alert(
-    "HLO started for " +
-    token +
-    "\\n\\n33-question Census form will open here."
-  );
-
-}
-
-
-/* =====================================================
-   QUEUE
-===================================================== */
-
-const demoQueue = [
-
-  {
-    token:"#050",
-    name:"Waiting",
-    status:"waiting"
-  },
-
-  {
-    token:"#051",
-    name:"Waiting",
-    status:"waiting"
-  },
-
-  {
-    token:"#052",
-    name:"Waiting",
-    status:"waiting"
-  }
-
-];
-
-
-function renderQueue(){
-
-  const container =
-    $("queueList");
-
-  const dashboard =
-    $("dashboardQueue");
-
-  if(!demoQueue.length){
-
-    container.innerHTML =
-      '<div class="empty">No households in queue.</div>';
-
-    dashboard.innerHTML =
-      '<div class="empty">No households in queue.</div>';
-
-    return;
-
-  }
-
-  container.innerHTML =
-    demoQueue
-      .map(function(item){
-
-        return `
-          <div class="queue-item">
-
-            <div>
-
-              <strong>
-                ${item.token}
-              </strong>
-
-              <div
-                style="font-size:12px;color:#9ca3af;"
-              >
-                ${item.name}
-              </div>
-
-            </div>
-
-            <span class="badge">
-              ${item.status}
-            </span>
-
-          </div>
-        `;
-
-      })
-      .join("");
-
-
-  dashboard.innerHTML =
-    demoQueue
-      .slice(0,3)
-      .map(function(item){
-
-        return `
-          <div class="queue-item">
-
-            <div>
-
-              <strong>
-                ${item.token}
-              </strong>
-
-              <div
-                style="font-size:12px;color:#9ca3af;"
-              >
-                ${item.name}
-              </div>
-
-            </div>
-
-            <span class="badge">
-              ${item.status}
-            </span>
-
-          </div>
-        `;
-
-      })
-      .join("");
-
-}
-
-
-function callNext(){
-
-  if(!demoQueue.length){
-
-    alert(
-      "No households waiting."
-    );
-
-    return;
-
-  }
-
-  const next =
-    demoQueue.shift();
-
-  next.status =
-    "active";
-
-  demoQueue.unshift(next);
-
-  renderQueue();
-
-  alert(
-    "Next household: " +
-    next.token
-  );
-
-}
-
-
-/* =====================================================
-   TEACHER ASSIGNMENT
-===================================================== */
-
-function assignTeacher(){
-
-  const teacher =
-    $("assignTeacher").value;
-
-  const classArea =
-    $("assignClass").value;
-
-  const households =
-    $("assignHouseholds").value;
-
-  closeModal("assignModal");
-
-  alert(
-    teacher +
-    " assigned to " +
-    classArea +
-    " with " +
-    households +
-    " households."
-  );
-
-}
-
-
-/* =====================================================
-   REPORT
-===================================================== */
-
-function exportReport(){
-
-  alert(
-    "Report export will be connected to the Census database."
-  );
-
-}
-
-
-/* =====================================================
-   CLOSE MODAL WHEN CLICKING OUTSIDE
-===================================================== */
-
-document
-  .querySelectorAll(".modal")
-  .forEach(function(modal){
-
-    modal.addEventListener(
-      "click",
-      function(event){
-
-        if(event.target === modal){
-
-          modal.classList.remove("show");
+            page.classList.add("active");
 
         }
 
-      }
+    });
+
+});
+
+
+/* =========================================================
+   HLO
+   ========================================================= */
+
+function openHLO(token){
+
+    $("hloToken").value =
+        token || "#NEXT";
+
+    $("hloModal").classList.add("show");
+
+}
+
+
+function startHLO(){
+
+    const token =
+        $("hloToken").value;
+
+    const head =
+        $("householdHead").value.trim();
+
+    if(!head){
+
+        alert("Please enter the name of the head of household.");
+
+        return;
+
+    }
+
+    closeModal("hloModal");
+
+    alert(
+        "HLO started for " +
+        token +
+        ".\n\nThe 33-question census form will be connected to the database next."
     );
 
-  });
+}
 
 
-/* =====================================================
+/* =========================================================
+   TEACHER
+   ========================================================= */
+
+function openTeacherModal(){
+
+    $("teacherModal").classList.add("show");
+
+}
+
+
+function assignTeacher(){
+
+    const name =
+        $("teacherName").value.trim();
+
+    const className =
+        $("teacherClass").value.trim();
+
+    const area =
+        $("teacherArea").value.trim();
+
+    if(!name || !className || !area){
+
+        alert("Please fill all teacher details.");
+
+        return;
+
+    }
+
+    closeModal("teacherModal");
+
+    alert(
+        "Teacher assignment recorded for " +
+        name +
+        " — " +
+        className +
+        " — " +
+        area
+    );
+
+    $("teacherName").value = "";
+    $("teacherClass").value = "";
+    $("teacherArea").value = "";
+
+}
+
+
+/* =========================================================
+   MODALS
+   ========================================================= */
+
+function closeModal(id){
+
+    $(id).classList.remove("show");
+
+}
+
+
+document.querySelectorAll(".modal").forEach(function(modal){
+
+    modal.addEventListener("click",function(event){
+
+        if(event.target === modal){
+
+            modal.classList.remove("show");
+
+        }
+
+    });
+
+});
+
+
+/* =========================================================
+   REPORT
+   ========================================================= */
+
+function exportReport(){
+
+    const report =
+`KODA Census Report
+
+Total Households: 320
+Completed: 248
+Pending: 72
+Progress: 77%
+`;
+
+    const blob =
+        new Blob(
+            [report],
+            {type:"text/plain"}
+        );
+
+    const url =
+        URL.createObjectURL(blob);
+
+    const link =
+        document.createElement("a");
+
+    link.href = url;
+    link.download = "koda-census-report.txt";
+
+    link.click();
+
+    URL.revokeObjectURL(url);
+
+}
+
+
+/* =========================================================
    START
-===================================================== */
-
-renderQueue();
+   ========================================================= */
 
 checkLogin();
 
